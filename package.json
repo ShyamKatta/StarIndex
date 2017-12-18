@@ -1,0 +1,15 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "server_script",
+  "main": "server_deploy.js",
+  "scripts": {
+    "start": "node server_deploy.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "y"
+  },
+  "author": "shyam_katta",
+  "license": "ISC"
+}
