@@ -1,0 +1,35 @@
+<html>
+        <meta charset="utf-8"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+<script>
+    $(document).ready(function(){
+        //alert(document.getElementById("rand").value);
+        $("button").click(function(){
+            $.ajax({
+                url: "https://api.github.com/users/"+$('#rand').val()+"/repos",
+
+                type: "GET",
+                success: function( response ) {
+                    //alert(response.statusCode);
+                    if(response.statusCode === 404){
+                        $("#output").html("No such user found.");
+                  }
+                  else{
+                        var starIndexObject = response[0].name;
+                        if(starIndexObject == "-Infinity"){
+                              $("#output").html("The user has no public repository.");
+                        }
+                        else{
+                              $("#output").html("Star Index : " + starIndexObject);
+                        }
+                    }
+                }
+            });
+    });
+});
+</script>
+
+<input type="text" id="rand" />
+<button  id="button-container">click here</button>
+<div id="output"></div>
+</html>
