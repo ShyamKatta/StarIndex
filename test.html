@@ -6,27 +6,27 @@
         //alert(document.getElementById("rand").value);
         $("button").click(function () {
             $.ajax({
-                url: "https://github-star-index.herokuapp.com/zzz/",//"https://api.github.com/users/"+$('#rand').val()+"/repos",
+                url: "http://localhost:3000/zzz/",//"https://api.github.com/users/"+$('#rand').val()+"/repos",
                 type: "GET",
-                // dataType: "json",
+                // dataType: "json", github-star-index.herokuapp.com
                 // data: {id}
                 data: { id: $('#rand').val() },
                 success: function (response) {
-                    //alert(response.statusCode);
-                    if (response.statusCode === 404) {
+                    alert(response.statusCode);
+                    if (response.statusCode == 404) {
+                        alert("sdgdf");
                         $("#output").html("No such user found.");
                     }
                     else {
                         console.log(response);
                         var starIndexObject = JSON.parse(JSON.stringify(response));//[0].name;
-                        if (starIndexObject == "-Infinity") {
-                            $("#output").html("The user has no public repository.");
-                        }
-                        else {
                             //$("#output").html("Star Index : " + starIndexObject);
-                            myFunction(starIndexObject)
-                        }
+                        myFunction(starIndexObject)
+                        
                     }
+                },
+                error: function(response){
+                    $("#output").html("No such user found.");
                 }
             });
         });

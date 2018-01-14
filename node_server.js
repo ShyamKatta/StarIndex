@@ -37,30 +37,40 @@ function saveStarIndexRepos() {
 }
 
 app.get('/zzz/', function (req, res) {
-    
+
     var url_parts = url.parse(req.url, true);
-    
+    console.log("wokring");
     // populate data for git hub api
     var GitServerOptions = {
         hostname: 'api.github.com',
         path: '/users/' + req.query.id + '/repos',
         method: 'GET',
         headers: {
-            'user-agent': 'harshakanamanapalli'
+            'user-agent': 'shyamkatta'
         }
     };
+
     //https://api.github.com/users/harshakanamanapalli/repos
     var gitResponse = '';
-    try {
-        var git_req = https.request(GitServerOptions, function (git_res) {
-            git_res.setEncoding('utf-8');
-            responseObject = {};
-            repoObject = [];
-            starIndexRepos = [];
-            output = {};
-            git_res.on("data", function (a) {
-                gitResponse += a;
-            });
+
+    var git_req = https.request(GitServerOptions, function (git_res) {
+        git_res.setEncoding('utf-8');
+        responseObject = {};
+        repoObject = [];
+        starIndexRepos = [];
+        output = {};
+        git_res.on("data", function (a) {
+            gitResponse += a;
+        });
+        console.log(git_res.statusCode);
+        try {
+            if (git_res.statusCode == 404) {
+                res.sendStatus(404);
+                throw new Error("LOL");
+                // git_res.end();
+            }
+
+
             git_res.on("end", function () {
                 responseObject = JSON.parse(gitResponse);
                 var stars = [];
@@ -85,23 +95,25 @@ app.get('/zzz/', function (req, res) {
                 });
                 res.end(output);
                 //res.json(starIndexRepos);
-                console.log ("sent StarIndex to ",req.query.id);
+                console.log("sent StarIndex to ", req.query.id);
+
             });
-            git_res.on('error', function (e) {
-                res.sendStatus(420);
-            });
-        }).on('error', function () {
-            console.log("error");
-            res.sendStatus(405);
-        }).end();
-    }
-    catch (e) {
-        console.log("error with  git code");
-        res.sendStatus(450);
-    }
+        }
+        catch (e) {
+            console.log(e);
+            //res.writeHead(404, { "Content-Type": "text/plain" });
+            res.end();
+        }
+        git_res.on('error', function (e) {
+            res.sendStatus(420);
+        });
+    }).on('error', function (e) {
+        console.log(e);
+        res.sendStatus(404);
+    }).end();
 });
 
 
-app.listen(8080, function () {
+app.listen(3000, function () {
     console.log('listening');
 });
