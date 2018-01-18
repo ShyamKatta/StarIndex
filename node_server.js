@@ -37,7 +37,7 @@ function saveStarIndexRepos() {
     });
 }
 
-app.get('/', function(req, res){
+app.get('/test.html', function(req, res){
     res.sendFile(   path.join(__dirname, 'test.html') );
 });
 
