@@ -113,7 +113,7 @@ app.get('/zzz/', function (req, res) {
     }).end();
 });
 
-
-app.listen(3000, function () {
-    console.log('listening');
+var port = process.env.PORT || 3000;
+app.listen(port, "0.0.0.0", function () {
+    console.log('listening on',port);
 });
