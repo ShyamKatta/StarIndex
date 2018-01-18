@@ -3,6 +3,7 @@ var url = require('url');
 var https = require('https');
 var express = require('express');
 var cors = require('cors');
+var path = require('path');
 
 var app = express();
 app.use(cors());
@@ -35,6 +36,10 @@ function saveStarIndexRepos() {
         }
     });
 }
+
+app.get('/', function(req, res){
+    res.sendFile(   path.join(__dirname, 'test.html') );
+});
 
 app.get('/zzz/', function (req, res) {
 
