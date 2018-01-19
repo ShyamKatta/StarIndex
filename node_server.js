@@ -12,6 +12,7 @@ var starIndex = 0;
 var repoObject = [];
 var starIndexRepos = [];
 
+//code to compute starindex - algorithm
 function computeStarIndex(stars) {
     var n = stars.length, tot = 0;
     var arr = Array(n + 1).fill(0);
@@ -26,6 +27,7 @@ function computeStarIndex(stars) {
     return 0;
 }
 
+//saving star index contributed repos to an object, later we push this into client response
 function saveStarIndexRepos() {
     repoObject.forEach(element => {
         if (element.repo_stars >= starIndex) {
@@ -37,11 +39,13 @@ function saveStarIndexRepos() {
     });
 }
 
-app.get('/test.html', function(req, res){
-    res.sendFile(   path.join(__dirname, 'test.html') );
+//display html file if a StarIndex path is requested
+app.get('/StarIndex', function (req, res) {
+    res.sendFile(path.join(__dirname, 'Find_my_StarIndex.html'));
 });
 
-app.get('/zzz/', function (req, res) {
+//API responds to requested username when path is HOST/MyGitStarAPI?id={username}, same url can beused as an API too.
+app.get('/MyGitStarAPI/', function (req, res) {
 
     var url_parts = url.parse(req.url, true);
     console.log("wokring");
@@ -55,9 +59,8 @@ app.get('/zzz/', function (req, res) {
         }
     };
 
-    //https://api.github.com/users/harshakanamanapalli/repos
     var gitResponse = '';
-
+    //fetch data from github api
     var git_req = https.request(GitServerOptions, function (git_res) {
         git_res.setEncoding('utf-8');
         responseObject = {};
@@ -118,7 +121,8 @@ app.get('/zzz/', function (req, res) {
     }).end();
 });
 
+// below code is modified for deployement, 0.0.0.0 is added to make this accept public requests, Port number doesnt matter, no need to include in URL
 var port = process.env.PORT || 3000;
 app.listen(port, "0.0.0.0", function () {
-    console.log('listening on',port);
+    console.log('listening on', port);
 });
