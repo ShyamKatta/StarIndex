@@ -6,24 +6,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
     <script>
         $(document).ready(function () {
-            //alert(document.getElementById("rand").value);
             $("button").click(function () {
                 $.ajax({
-                    url: "https://blooming-plains-41639.herokuapp.com/MyGitStarAPI", //MyGitStarAPI/",//"https://api.github.com/users/"+$('#rand').val()+"/repos",
+                    url: "https://blooming-plains-41639.herokuapp.com/MyGitStarAPI", "+$('#rand').val()+"/repos",
                     type: "GET",
-                    // dataType: "json", github-star-index.herokuapp.com
-                    // data: {id}
                     data: { id: $('#rand').val() },
                     success: function (response) {
-                        //alert(response.statusCode);
                         if (response.status == 404) {
                             alert("sdgdf");
                             $("#index_output").html("No such user found.");
                         }
                         else {
                             console.log("wesdf ",JSON.parse(JSON.stringify(response)));
-                            var starIndexObject = JSON.parse(JSON.stringify(response));//[0].name;
-                            //$("#output").html("Star Index : " + starIndexObject);
+                            var starIndexObject = JSON.parse(JSON.stringify(response));
                             myFunction(starIndexObject)
 
                         }
@@ -32,16 +27,12 @@
 					$("#index_output").show();
 					$("#index").hide();
 					$("#myTable").hide();
-					//$("#index_output").attr('class','alert alert-danger');
-					
                         $("#index_output").html("No such user found.");
                     }
                 });
             });
         });
 
-        // var obj = JSON.parse('{"starIndex":4,"starIndexRepos":[{"repo_name":"anacrowd","repo_stars":4},{"repo_name":"attachables","repo_stars":21},{"repo_name":"autogit","repo_stars":72},{"repo_name":"autogit-st","repo_stars":4},{"repo_name":"automark","repo_stars":12},{"repo_name":"docsight","repo_stars":18}]}');
-        //document.getElementById("demo").innerHTML = obj.starIndex + ", " + obj.starIndexRepos[0].repo_name;
         myFunction();
 		
 		function loadFun(){
@@ -64,7 +55,6 @@
             console.log("I write ",obj.starIndexRepos.length," is written here");
             for (var i = 0; i < obj.starIndexRepos.length; i++) {
                 row = table.insertRow(1);
-				//row.style(class="success");
                 cell1 = row.insertCell(0);
                 cell2 = row.insertCell(1);
                 cell1.innerHTML = obj.starIndexRepos[i].repo_name;
