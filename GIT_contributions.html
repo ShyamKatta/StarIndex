@@ -116,7 +116,7 @@
                     return;
                 }
                 $.ajax({
-                    url: "http://api.github.com/users/"+$('#rand').val()+"/repos",
+                    url: "https://api.github.com/users/"+$('#rand').val()+"/repos",
                     type: "GET",
                     success: function(response){
                         if (response.status == 404) {
@@ -126,7 +126,7 @@
                         }
                         else{
                             $.ajax({
-                            url: "http://localhost:3000/MyGitContributionsAPI?uname="+$('#rand').val(),
+                            url: "https://localhost:3000/MyGitContributionsAPI?uname="+$('#rand').val(),
                             type: "GET",
                             //data: { uname: $('#rand').val() },
                             success: function (response) {
