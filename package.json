@@ -15,5 +15,9 @@
   "devDependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.2"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "express": "^4.16.2"
   }
 }
