@@ -76,7 +76,7 @@
             <button id="button-container" type="button" class="btn btn-success">click here</button>
             <br><br>
             <div id="index_output" class="alert alert-info"  ></div>
-            <div id="repositories_output" style="width:50%;">   <!--word-wrap:break-word -->
+            <div id="repositories_table_output" style="width:50%;" style="display:none;">   <!--word-wrap:break-word -->
             
             <h3 id ="index" style="display: none">
                 Contributions grouped by date
@@ -95,6 +95,8 @@
             </center>
             </table>
             </div>
+			<div id="repositories_output" style="width:50%;" style="display:none;">
+			</div>
             </center>
             
         </body>
@@ -126,7 +128,7 @@
                         }
                         else{
                             $.ajax({
-                            url: "https://localhost:3000/MyGitContributionsAPI?uname="+$('#rand').val(),
+                            url: "http://git-contribution.us-east-2.elasticbeanstalk.com/MyGitContributionsAPI?uname="+$('#rand').val(),        //Git-contribution.us-east-2.elasticbeanstalk.com
                             type: "GET",
                             //data: { uname: $('#rand').val() },
                             success: function (response) {
@@ -165,7 +167,9 @@
 		function loadFun(){
             $("#loading").hide();
             document.getElementById('index_output').style.display= "none";
-            var elem = document.getElementById('index')
+            var elem = document.getElementById('index');
+			document.getElementById('repositories_output').style.display = "none";
+			document.getElementById('repositories_table_output').style.display = "none";
             if(typeof elem !== 'undefined' && elem !== null)
 			    document.getElementById('index').style.display = 'none';
         }
@@ -206,17 +210,23 @@
 
             if ( !!select_date.valueOf() ) { // Valid date, then display dates in date range
                 console.log("valid");
-                var table = document.getElementById("myTable");
-                var row, cell1, cell2;
-                var rowCount = table.rows.length;
-                document.getElementById('index_output').style.display = 'block';
+				document.getElementById('index_output').style.display = 'block';
                 document.getElementById('myTable').style.display = 'table';
                 document.getElementById('index').style.display = 'block';
-                for (var i = rowCount - 1; i > 0; i--) {
+                
+				document.getElementById('repositories_output').style.display = "none";
+				document.getElementById('repositories_table_output').style.display = 'block';
+                var table = document.getElementById("myTable");
+                var row, cell1, cell2;
+				if(typeof elem !== 'undefined' && elem !== null){
+					var rowCount = table.rows.length;
+					for (var i = rowCount - 1; i > 0; i--) {
                     table.deleteRow(i);
                 }
+				}
+                
                 let total_contr = 0;
-                console.log("I write  is written here");
+                //console.log("I write  is written here");
                 for (var i = 0; i < new_search.length; i++) {
                     if(output_arr[new_search[i]]!=0){
                         row = table.insertRow(1);
@@ -237,6 +247,9 @@
                 document.getElementById('index_output').innerHTML = "<h2><strong> Contribution Array of user: " + $('#rand').val() + "</strong></h1><br>"+
                     "<p>Please note - all contributions visible on date "+last_year.toString().split(' ').slice(0, 4).join(' ')+" are cumulative contributions on and before of "+last_year.toString().split(' ').slice(0, 4).join(' ')+"</p>";
                 //document.getElementById('repositories_output').innerHTML = "<span>"+output_arr[354]+"</div>"//"<span class='tooltip'>"+output_arr[354] +" ,<span class='tooltiptext'>jamba</span></span>";
+				
+			document.getElementById('repositories_output').style.display = 'block';
+			document.getElementById('repositories_table_output').style.display = "none";
                 document.getElementById('repositories_output').innerHTML = "{";
                 for(var i=0; i<output_arr.length; i++){
                     document.getElementById('repositories_output').innerHTML += "<span class='tooltip_1'>"+output_arr[i] +" ,<span class='tooltiptext_1'>"+output_arr_rel_data[i]+"</span></span>";

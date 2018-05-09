@@ -8,14 +8,18 @@ from tzlocal import get_localzone
 from pytz import timezone		# need to install pytz by running pip install pytz
 
 #import set
-
+#access_oauth = ""#"607cd81a547250396b7dbd60f7d34dd06175a4a4"
 inp = sys.argv
-if len(inp)!=2:
+if len(inp)==3:
+	access_oauth=inp[2]
+elif len(inp)==2:
+	access_oauth=""
+else:	
 	print "please input in format -> python trials.py 'Github username'"
 	exit()
 iter = 1
 uname = inp[1]	#"harshakanamanapalli"
-url = "https://api.github.com/users/"+uname+"/events?page="+str(iter)+"&per_page=100"
+url = "https://api.github.com/users/"+uname+"/events?page="+str(iter)+"&per_page=100&access_token="+access_oauth
 #data = '{  "platform": {    "login": {      "userName": "shyamkatta",      "password": "xx"    }}}'
 mycounts = {}
 totalcount = 0
@@ -31,7 +35,7 @@ year_back_date = ((utc.localize(datetime.datetime.now()).astimezone(get_localzon
 final_result= {}
 
 while(1):
-	r = requests.get(url,auth = ('shyamkatta','f49cb7f4e110672f4ddc22657b4886f04dad2e40'),headers={"Content-Type": "application/json"})
+	r = requests.get(url,headers={"Content-Type": "application/json"})
 	jsonObj  = r.json()
 	if (r.status_code==200  or r.status_code == 304) and (len(jsonObj)!=0):
 		for i in jsonObj:
@@ -45,18 +49,18 @@ while(1):
 				# mycounts[type]=1
 			totalcount+=1
 		iter+=1
-		url = "https://api.github.com/users/"+uname+"/events?page="+str(iter)+"&per_page=100"
+		url = "https://api.github.com/users/"+uname+"/events?page="+str(iter)+"&per_page=100&access_token="+access_oauth
 	else:
 		break
 
 # get user npn forked repositories
 iter=1
-url = "https://api.github.com/search/repositories?q=user:"+uname+"&per_page=100"
+url = "https://api.github.com/search/repositories?q=user:"+uname+"&per_page=100&access_token="+access_oauth
 #https://api.github.com/search/repositories?q=user:shyamkatta
 					
 
 # url = "api.github.com/users/"+uname+"/repos"
-r = requests.get(url,auth = ('shyamkatta','f49cb7f4e110672f4ddc22657b4886f04dad2e40'),headers={"Content-Type": "application/json"})
+r = requests.get(url,headers={"Content-Type": "application/json"})
 jsonobj = r.json()
 if r.status_code==200  or r.status_code == 304:
 	for i in jsonobj['items']:
@@ -90,10 +94,10 @@ if r.status_code==200  or r.status_code == 304:
 # users organizations 
 # https://api.github.com/users/Dogild/orgs
 # assuming user would not be in >100 organizations
-url = "https://api.github.com/users/"+uname+"/orgs?per_page=100"
+url = "https://api.github.com/users/"+uname+"/orgs?per_page=100&access_token="+access_oauth
 orgs_repo_url=[]
 
-r = requests.get(url,auth = ('shyamkatta','f49cb7f4e110672f4ddc22657b4886f04dad2e40'),headers={"Content-Type": "application/json"})
+r = requests.get(url,headers={"Content-Type": "application/json"})
 jsonObj = r.json()
 if (r.status_code==200  or r.status_code == 304) and (len(jsonObj)!=0):
 	for orgs in jsonObj:
@@ -107,7 +111,7 @@ if(len(orgs_repo_url)!=0):
 		iter=1
 		while(1):
 			url = orgs+"?page="+str(iter)+"&per_page=100"
-			r = requests.get(url,auth = ('shyamkatta','f49cb7f4e110672f4ddc22657b4886f04dad2e40'),headers={"Content-Type": "application/json"})
+			r = requests.get(url,headers={"Content-Type": "application/json"})
 			jsonObj = r.json()
 			#print url
 			if (r.status_code==200  or r.status_code == 304) and (len(jsonObj)!=0):
@@ -130,11 +134,11 @@ iter = 1
 # 0-commits, 1-issues, 2-pull-requests, 3-created
 # str.split('T')[0]
 # date = datetime.datetime.strptime(<date_string>, "%Y-%m-%dT%H:%M:%SZ")
-url = "https://api.github.com/search/issues?q=type:pr+author:"+uname+"&per_page=100"
+url = "https://api.github.com/search/issues?q=type:pr+author:"+uname+"&per_page=100&access_token="+access_oauth
 
 from pytz import timezone
 while(1):
-	r = requests.get(url+"&page="+str(iter),auth = ('shyamkatta','f49cb7f4e110672f4ddc22657b4886f04dad2e40'),headers={"Content-Type": "application/json"})
+	r = requests.get(url+"&page="+str(iter),headers={"Content-Type": "application/json"})
 	jsonObj  = r.json()
 	if (r.status_code==200  or r.status_code == 304) and (len(jsonObj)!=0):
 		for i in jsonObj['items']:
@@ -176,9 +180,9 @@ while(1):
 
 # 0-commits, 1-issues, 2-pull-requests, 3-created
 iter=1
-url = "https://api.github.com/search/issues?q=type:issue+author:"+uname+"&per_page=100"
+url = "https://api.github.com/search/issues?q=type:issue+author:"+uname+"&per_page=100&access_token="+access_oauth
 while(1):
-	r = requests.get(url+"&page="+str(iter),auth = ('shyamkatta','f49cb7f4e110672f4ddc22657b4886f04dad2e40'),headers={"Content-Type": "application/json"})
+	r = requests.get(url+"&page="+str(iter),headers={"Content-Type": "application/json"})
 	jsonObj  = r.json()
 	if (r.status_code==200  or r.status_code == 304) and (len(jsonObj)!=0):
 		for i in jsonObj['items']:
@@ -230,8 +234,8 @@ uniqueRepoSet = set(repoList)
 
 for repo in uniqueRepoSet:
 	#event, repo = repoEvent
-	url = "https://api.github.com/repos/"+repo
-	r = requests.get(url,auth = ('shyamkatta','f49cb7f4e110672f4ddc22657b4886f04dad2e40'),headers={"Content-Type": "application/json"})
+	url = "https://api.github.com/repos/"+repo+"?access_token="+access_oauth
+	r = requests.get(url,headers={"Content-Type": "application/json"})
 	if r.status_code==200 or r.status_code == 304:
 		jsonObj = r.json()
 		if jsonObj['fork']:
@@ -260,12 +264,12 @@ temp_list = set([x[0] for x in  FinalRepoEventList])
 for i in temp_new_list:
 	if (1):#i[0]=="org_repo" or i[0]=="user_repo"):
 		# get the user commits from this repo
-		url = "https://api.github.com/repos/"+i+"/commits?author="+uname	#:owner/:repo/
+		url = "https://api.github.com/repos/"+i+"/commits?author="+uname+"&access_token="+access_oauth	#:owner/:repo/
 		iter=0
 		while(1):
 			iter+=1
 			#print url+"&page="+str(iter)+"&per_page=100"
-			r = requests.get(url+"&page="+str(iter)+"&per_page=100",auth = ('shyamkatta','f49cb7f4e110672f4ddc22657b4886f04dad2e40'),headers={"Content-Type": "application/json"})
+			r = requests.get(url+"&page="+str(iter)+"&per_page=100",headers={"Content-Type": "application/json"})
 			jsonObj  = r.json()
 			if (r.status_code==200 or r.status_code == 304) and (len(jsonObj)!=0):
 				for res in jsonObj:

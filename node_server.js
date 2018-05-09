@@ -7,7 +7,7 @@ var path = require('path');
 var app = express();
 
 //API responds to requested username when path is HOST/MyGitContributionsAPI?uname={username}, same url can beused as an API too.
-app.get('/MyGitContributionsAPI/', function (req, res) {
+app.get('/MyGitContributionsAPI', function (req, res) {
 
     var url_parts = url.parse(req.url, true);
     console.log("wokring");
@@ -16,19 +16,24 @@ app.get('/MyGitContributionsAPI/', function (req, res) {
     const pyProg= spawn('python',['./scripts/MyContributions.py',req.query.uname])    // spawn process with single argument
     //const pyProg= spawn('python',['./scripts/sample_test.py'])
     let py_data;
-    let collect;
+    let collect="";
     pyProg.stdout.on('data', function(data){
         //console.log(data.toString());
         //res.write(data);
-        collect = data.toString(); 
+        collect += data.toString();
         //py1_data = JSON.parse("'"+data+"'");
         //console.log("received ");
-        //console.log(collect);
+        
         //console.log(py1_data)
         //res.end();
     })
     pyProg.stdout.on('end', function(){
         //console.log("here");
+        //console.log(collect);
+        if(collect=="[]"|| collect==""){
+            console.log("No contribution data for user "+req.query.uname);
+            response.status(404).send("No contributions present for "+req.query.uname)
+        }
         py_data=JSON.parse(collect);
         //console.log(py_data)
         console.log("response sent about user - "+req.query.uname)
@@ -40,6 +45,14 @@ app.get('/MyGitContributionsAPI/', function (req, res) {
 //display html file if a StarIndex path is requested
 app.get('/MyContributions', function (req, res) {
     res.sendFile(path.join(__dirname, 'GIT_contributions.html'));
+});
+
+app.get('/oauth/success',function(req,res){
+    var url_parts = url.parse(req.url, true);
+    console.log(url_parts);
+    console.log("auth activated callback");
+    res.send(url_parts);
+    //req.query.uname
 });
 
 // render the HTML file for default route
